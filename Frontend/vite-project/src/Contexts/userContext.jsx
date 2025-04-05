@@ -14,7 +14,7 @@ const UserProvider = ({ children }) => {
         if (user) return;
         const accessToken = localStorage.getItem("token")
         if (!accessToken) {
-            setLoading(fasle)
+            setLoading(false)
             return;
         }
         const fetchUser = () => {
