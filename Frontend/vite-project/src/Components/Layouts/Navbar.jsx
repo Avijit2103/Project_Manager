@@ -1,8 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-const Navbar = () => {
+const Navbar = ({activeMenu}) => {
+  const [openSideMenu,setOpenSideMenu] = useState()
   return (
-    <div>Navbar</div>
+    <div className=''>
+    <button
+    className=''
+    onClick={()=>{
+        setOpenSideMenu(!openSideMenu);
+    }}
+    >
+    { openSideMenu?(
+        <HiOutlinex className=''/>
+    ):(
+        <HiOutlineMenu className=''/>
+    )};
+    </button>
+    
+    </div>
+     
+
   )
 }
 
