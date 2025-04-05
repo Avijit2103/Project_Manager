@@ -14,8 +14,10 @@ import DashboardU from './Pages/User/DashboardU'
 import MyTasks from './Pages/User/MyTasks'
 import TaskDetails from './Pages/User/TaskDetails'
 import PrivateRoutes from './Routes/PrivateRoutes'
+import UserProvider from './Contexts/userContext'
 const App = () => {
   return (
+    <UserProvider>
     <div>
       <Router>
         <Routes>
@@ -37,6 +39,7 @@ const App = () => {
         </Routes>
       </Router>
     </div>
+    </UserProvider>
   )
 }
 
