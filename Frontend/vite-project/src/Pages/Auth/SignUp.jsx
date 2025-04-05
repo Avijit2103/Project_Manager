@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import AuthLayout from '../../Components/Layouts/AuthLayout'
 import { validateEmail } from '../../utils/helper';
 import ProfilePhotoSelector from '../../Components/Inputs/ProfilePhotoSelector';
 import Input from '../../Components/Inputs/Input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { API_PATHS } from '../../utils/apiPaths';
+import axiosInstance from '../../utils/axiosInstance';
+import { userContext } from '../../Contexts/userContext';
+import uploadImage from '../../utils/uploadImage';
 
 const SignUp = () => {
   const [profilePic, setProfilePic] = useState(null);
@@ -11,12 +15,13 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [adminInviteToken, setAdminInviteToken] = useState("")
-
+  const {updateUser} = useContext(userContext)
   const [error, setError] = useState(null)
-
+  const navigate = useNavigate();
   //handle form submit
   const handleSignup = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); 
+    let profileImageUrl = ''
     if (!fullname) {
       setError("please enter full name ")
       return;
@@ -31,7 +36,36 @@ const SignUp = () => {
     }
     setError("")
     //Signup  API call
-
+    try{
+      // upload image if present
+      if(profilePic){
+        const imgUploadImageRes = await uploadImage(profilePic)
+        profileImageUrl = imgUploadImageRes.imageUrl || '';
+      }
+      const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER,{
+        name:fullname,
+        email,
+        password,
+        profileImageUrl,
+        adminInviteToken,
+      });
+      const {token,role} = response.data;
+      if(token){
+        localStorage.setItem("token",token);
+        updateUser(response.data)
+        if(role == 'admin'){
+          navigate('/admin/dashboard')
+        }else{
+          navigate('/user/dashboard')
+        }
+      }
+   }catch(error){
+    if(error.response && error.response.data.message){
+      setError(error.response.data.message)
+    }else{
+      setError("An error occurred")
+    }
+   }
   }
   return (<AuthLayout>
     <div className='lg-w-[100%] h-auto md:h-full mt-10 md:mt-0 flex flex-col justify-center '>
