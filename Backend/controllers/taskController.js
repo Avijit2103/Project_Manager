@@ -221,7 +221,7 @@ const updateTaskChecklist = async (req, res) => {
         }
         task.todoChecklist = todoChecklist;
         //Auto update progess based on checklist comletion
-        const completedCount = task.todoChecklist.filter((item) => item.completed).length;
+        const completedCount = task.todoChecklist.filter((item) => item.completed == true).length;
         // this will not work if the todocheck list is empty
         const totalItems = task.todoChecklist.length;
         task.progress = totalItems > 0 ? Math.round((completedCount / totalItems) * 100) : 0;
