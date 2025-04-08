@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
 import SelectDropDown from '../../Components/Inputs/SelectDropDown';
+import SelectUser from '../../Components/Inputs/SelectUser';
 const CreateTasks = () => {
   const location = useLocation();
   const { taskId } = location.state || {};
@@ -109,10 +110,45 @@ const CreateTasks = () => {
             <SelectDropDown
              options={PRIORITY_DATA}
              value={taskData.priority}
-             onChange={(e) => handleValueChange('priority', e.target.value)}
+             onChange={(value) => handleValueChange('priority', value)}
              placeholder='select priority'
              />
            </div>
+           <div className='col-span-6 md:col-span-4'>
+           <label className='text-xs font-medium text-slate-600'>
+           Due Date
+           </label>
+           <input
+            placeholder='create a ui'
+            className='form-input'
+            value={taskData.dueData}
+            type='date'
+            onChange={({target})=>
+            handleValueChange('dueDate',target.value)
+          }/>
+           </div>
+           <div className='col-span-12 md:col-span-3'>
+             <label className='text-xs font-medium text-slate-600'>
+             Assigned To
+             </label>
+             <SelectUser
+              selectedUser={taskData.assignedTo}
+              SetSelectedUser={(value)=>{
+                handleValueChange('assignedTo',value)
+              }}
+              />
+           </div>
+
+          </div>
+          <div className='mt-3'>
+           <label className='text-xs font-medium text-slate-600'>
+           TODO Checklist</label>
+           <ToDoInput
+            todoList={taskData?.todoChecklist}
+            setTodoList = {(value)=>
+              handleValueChange('todoChecklist',value)
+            }
+            />
           </div>
         </div>
        </div>

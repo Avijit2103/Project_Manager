@@ -26,6 +26,9 @@ body{
 .card-btn{
   @apply flex items-center gap-3 text-[12px] font-medium text-gray-700 hover:text-[#3490dc] bg-gray-50 hover:bg-blue-50 px-4 py-1.5 rounded-lg border border-gray-200/50 cursor-pointer;
 }
+.card-btn-fill{
+  @apply flex items-center gap-3 text-[12px] font-medium text-white hover:text-[#3490dc] bg-[#3490dc] hover:bg-blue-50 px-4 py-1.5 rounded-lg border border-blue-500 cursor-pointer
+}
 .form-card{
   @apply bg-white p-6 rounded-lg shadow-md shadow-gray-100 border border-gray-200/50 ; 
 }
