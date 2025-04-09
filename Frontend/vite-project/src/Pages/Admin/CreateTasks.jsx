@@ -19,7 +19,7 @@ const CreateTasks = () => {
     title: '',
     description: '',
     priority: 'Low',
-    dueData: null,
+    dueDate: null,
     assignedTo: [],
     todoChecklist: [],
     attachments: [],
@@ -36,20 +36,66 @@ const CreateTasks = () => {
       title: '',
       description: '',
       priority: 'Low',
-      dueData: null,
+      dueDate: null,
       assignedTo: [],
       todoChecklist: [],
       attachments: [],
     })
   }
   const CreateTask = async () => {
-    const repsonse = axiosInstance.post(API_PATHS.TASKS.CREATE_TASK)
+    setLoading(true);
+    try{
+       const todolist = taskData.todoChecklist?.map((item)=>({
+        text:item,
+        completed:false
+       }))
+       const repsonse = axiosInstance.post(API_PATHS.TASKS.CREATE_TASK,{
+        ...taskData,
+        dueData: new Date(taskData.dueDate).toISOString(),
+        todoChecklist:todolist,
+       })
+       toast.success("Task Created Succesfully")
+       clearData();
+
+    }catch(error){
+       console.error("Error creating task",error)
+       setLoading(false);
+    }finally{
+      setLoading(false);
+    }
+    
   }
   const updateTask = async () => {
 
   }
   const handleSubmit = async () => {
-
+      setError(null);
+      //input validation
+      if(!taskData.title.trim()){
+        setError("title feild is required");
+        return;
+      }
+      if(!taskData.description.trim()){
+        setError("description feild is required");
+        return;
+      }
+      if(!taskData.dueDate){
+        setError("due date is required");
+        return;
+      }
+      if(!taskData.assignedTo?.length === 0){
+        setError("you haven't assigned task to member");
+        return;
+      }
+      if(!taskData.todoChecklist?.length === 0){
+        setError("you haven't made any task ");
+        return;
+      }
+      if(taskId){
+        updateTask();
+        return;
+      }
+      CreateTask();
   }
   const getTaskDetailsById = async () => {
 
@@ -123,7 +169,7 @@ const CreateTasks = () => {
                 <input
                   placeholder='create a ui'
                   className='form-input'
-                  value={taskData.dueData}
+                  value={taskData.dueDate}
                   type='date'
                   onChange={({ target }) =>
                     handleValueChange('dueDate', target.value)
@@ -166,7 +212,7 @@ const CreateTasks = () => {
               <p className="text-xs font-medium text-red-500 mt-5">{error}</p>
             )}
 
-            <div className="flex justify-end mt-7">
+            <div className="flex justify-end mt-7"> 
               <button
                 className="add-btn"
                 onClick={handleSubmit}
