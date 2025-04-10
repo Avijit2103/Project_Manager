@@ -17,9 +17,9 @@ const UserProvider = ({ children }) => {
             setLoading(false)
             return;
         }
-        const fetchUser = () => {
+        const fetchUser = async() => {
             try {
-                const response = axiosInstance.get(API_PATHS.AUTH.GET_PROFILE)
+                const response = await axiosInstance.get(API_PATHS.AUTH.GET_PROFILE)
                 SetUser(response.data)
             } catch (error) {
                 console.error("user not authentication", error);
