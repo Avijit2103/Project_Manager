@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DashboardLayout from '../../Components/Layouts/DashboardLayout';
 import { PRIORITY_DATA } from '../../utils/data';
 import toast from 'react-hot-toast';
@@ -10,6 +10,7 @@ import SelectDropDown from '../../Components/Inputs/SelectDropDown';
 import SelectUser from '../../Components/Inputs/SelectUser';
 import ToDoInput from '../../Components/Inputs/ToDoInput';
 import AddAttachmentsInput from '../../Components/Inputs/AddAttachmentsInput';
+import moment from 'moment';
 const CreateTasks = () => {
   const location = useLocation();
   const { taskId } = location.state || {};
@@ -66,7 +67,7 @@ const CreateTasks = () => {
     
   }
   const updateTask = async () => {
-
+      
   }
   const handleSubmit = async () => {
       setError(null);
@@ -98,11 +99,36 @@ const CreateTasks = () => {
       CreateTask();
   }
   const getTaskDetailsById = async () => {
+     try{
+      const response = await axiosInstance.get(API_PATHS.TASKS.GET_TASK_BY_ID(taskId));
+      if(response.data){
+        const taskInfo = response.data;
+        setCurrentTask(taskInfo);
+        setTaskData((prevState)=>({
+          title:taskInfo.title,
+          description:taskInfo.description,
+          priority:taskInfo.priority,
+          dueDate:taskInfo.dueDate?moment(taskInfo.dueDate).format('YYYY-MM-DD'): null,
+          assignedTo:taskInfo?.assignedTo?.map((item)=>item?._id) || [],
+          todoChecklist:taskInfo?.todoChecklist?.map((item)=>item?.text) ||[],
+          attachments:taskInfo?.attachments || []
 
+        }))
+
+      }
+     }catch(error){
+       console.error("Error fetching task",error)
+     }
   }
   const deleteTask = async () => {
 
   }
+  useEffect(()=>{
+    if(taskId){
+      getTaskDetailsById(taskId);
+    }
+    return ()=>{}
+    },[taskId])
   return (
     <DashboardLayout activeMenu="Create Task">
       <div className='mt-5'>
