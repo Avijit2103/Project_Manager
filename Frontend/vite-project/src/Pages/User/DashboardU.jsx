@@ -64,7 +64,7 @@ const DashboardU = () => {
     }
   }, [user])
   const onSeeMore = () => {
-    navigate('/admin/tasks')
+    navigate('/user/tasks')
   }
 
   return (
