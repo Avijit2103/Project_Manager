@@ -16,8 +16,9 @@ import DashboardU from './Pages/User/DashboardU'
 import MyTasks from './Pages/User/MyTasks'
 import TaskDetails from './Pages/User/TaskDetails'
 import PrivateRoutes from './Routes/PrivateRoutes'
-import UserProvider from './Contexts/userContext'
+import UserProvider, { userContext } from './Contexts/userContext'
 import { Toaster } from 'react-hot-toast'
+
 const App = () => {
   return (
     <UserProvider>
@@ -60,7 +61,7 @@ const App = () => {
 export default App
 
 const Root =()=>{
-   const {user,loading} = useContext(UserProvider)
+   const {user,loading} = useContext(userContext)
    if(loading) return <Outlet/>
    if(!user){
     return <Navigate to='/login'/>
